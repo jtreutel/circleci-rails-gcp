@@ -1,0 +1,19 @@
+#-------------------------------------------------------------------------------
+# REQUIRED VARS
+# Required input values without which the plan will not run.
+#-------------------------------------------------------------------------------
+
+gcp_region           = "ap-northeast1"
+gcp_project_name     = "myrailsdemoproject"
+google_dns_zone_name = "my-dns-zone"
+
+#-------------------------------------------------------------------------------
+# OPTIONAL VARS
+# Default values supplied, but you should still review each one.
+#-------------------------------------------------------------------------------
+
+#machine_type = "e2-medium"
+#image_name   = "ubuntu-2004-focal-v20210413"
+#allowed_source_ip_ranges = [
+#  # your IP ranges go here
+#]
