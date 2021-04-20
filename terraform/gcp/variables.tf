@@ -17,6 +17,12 @@ variable "google_dns_zone_name" {
 
 #Optional variables
 
+variable "commit_hash" {
+  type        = string
+  default     = ""
+  description = "Optionally use a commit hash instead of a randomly generated ID."
+}
+
 variable "machine_type" {
   type        = string
   default     = "e2-medium"
