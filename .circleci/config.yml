@@ -21,7 +21,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - run: apt install libsqlite3-dev
+      - run: sudo apt install libsqlite3-dev
       - ruby/install-deps
       # Store bundle cache
       - node/install-packages:
