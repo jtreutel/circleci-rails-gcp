@@ -56,6 +56,7 @@ group :test do
   gem 'rexml'
   gem 'rspec-rails'
   gem 'rspec_junit_formatter'
+  gem 'rubocop'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
