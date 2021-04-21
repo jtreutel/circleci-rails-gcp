@@ -43,12 +43,12 @@ jobs:
       #    pkg-manager: yarn
       #    cache-key: "yarn.lock"
       # Run rspec in parallel
-      - run:
-          name: Install Ruby gems for testing
-          command: |
-            bundle config set --local with 'test'
-            bundle config set --local deployment 'true'
-            bundle install
+      #- run:
+      #    name: Install Ruby gems for testing
+      #    command: |
+      #      bundle config set --local with 'test'
+      #      bundle config set --local deployment 'true'
+      #      bundle install
       - ruby/rspec-test
       - ruby/rubocop-check
   terraform-format-check:
