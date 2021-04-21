@@ -43,9 +43,9 @@ jobs:
       #    pkg-manager: yarn
       #    cache-key: "yarn.lock"
       # Run rspec in parallel
-      - command:
+      - run:
           name: Install Ruby gems for testing
-          run: |
+          command: |
             bundle config set --local with 'test'
             bundle install
       - ruby/rspec-test
