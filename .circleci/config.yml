@@ -1,9 +1,9 @@
 version: 2.1
 
 orbs:
-  ruby: circleci/ruby@1.1.0
-  node: circleci/node@2
-  terraform: circleci/terraform@1.2.0
+  ruby: circleci/ruby@1.1.2
+  node: circleci/node@4.2.1
+  terraform: circleci/terraform@2.0.1
 
 jobs:
   checkout-code:
@@ -29,7 +29,7 @@ jobs:
   test:
     parallelism: 2
     docker:
-      - image: cimg/ruby:2.7.2-node
+      - image: cimg/ruby:3.0.0-node
     steps:
       - attach_workspace:
           at: .
@@ -69,8 +69,8 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - terraform/install:  
-          terraform_version: 0.14.5
+      #- terraform/install:  
+      #    terraform_version: 0.14.5
       - terraform/init:
           path: ./terraform/gcp
       - terraform/apply:
