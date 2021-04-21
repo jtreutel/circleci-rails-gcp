@@ -80,8 +80,8 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      #- terraform/install:  
-      #    terraform_version: 0.14.5
+      - terraform/install:  
+          terraform_version: 0.14.5
       - terraform/init:
           path: ./terraform/gcp
       - terraform/apply:
