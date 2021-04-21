@@ -81,6 +81,8 @@ jobs:
           path: ./terraform/gcp
           var: 'gcp_region=${GCP_REGION},gcp_project_name=${GCP_PROJECT_NAME},google_dns_zone_name=${GOOGLE_DNS_ZONE_NAME},commit_hash=${CIRCLE_SHA1},'
 
+
+
 workflows:
   version: 2
   build_and_test:
@@ -93,9 +95,11 @@ workflows:
           requires:
             - build
       - terraform-format-check:
+          context: gcp-tf-testing
           requires:
             - checkout-code
       - terraform-validate-and-plan:
+          context: gcp-tf-testing
           requires:
             - checkout-code
       - manual-approval:
@@ -104,5 +108,6 @@ workflows:
             - terraform-validate-and-plan
             - test
       - terraform-apply-infra:
+          context: gcp-tf-testing
           requires:
             - manual-approval
