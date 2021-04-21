@@ -25,7 +25,11 @@ jobs:
       # Store bundle cache
       - node/install-packages:
           pkg-manager: yarn
-          cache-key: "yarn.lock"
+          #cache-key: "yarn.lock"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
   test:
     parallelism: 2
     docker:
@@ -33,10 +37,10 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - ruby/install-deps
-      - node/install-packages:
-          pkg-manager: yarn
-          cache-key: "yarn.lock"
+      #- ruby/install-deps
+      #- node/install-packages:
+      #    pkg-manager: yarn
+      #    cache-key: "yarn.lock"
       # Run rspec in parallel
       - ruby/rspec-test
       - ruby/rubocop-check
