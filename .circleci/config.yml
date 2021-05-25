@@ -125,7 +125,7 @@ workflows:
           context: gcp-tf-testing
           requires:
             - checkout-code
-      - manual-approval:
+      - manual-approval-apply:
           type: approval
           requires:
             - terraform-validate-and-plan
@@ -133,10 +133,12 @@ workflows:
       - terraform-apply-infra:
           context: gcp-tf-testing
           requires:
-            - manual-approval
+            - manual-approval-apply
       - manual-approval-destroy:
           type: approval
           requires:
             - terraform-apply-infra
       - terraform-destroy-infra:
           context: gcp-tf-testing
+          requires:
+            - manual-approval-destroy
