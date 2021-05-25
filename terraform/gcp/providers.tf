@@ -6,7 +6,7 @@ provider "google" {
 
 terraform {
   backend "gcs" {
-    bucket  = "jtreutel-demo-tfstate"
-    prefix  = "circleci-rails-gcp"
+    bucket = "jtreutel-demo-tfstate"
+    prefix = "circleci-rails-gcp"
   }
 }
