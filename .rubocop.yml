@@ -2,3 +2,7 @@ AllCops:
   Exclude:
     - 'bin/bundle'
     - 'node_modules/**/*'
+    - 'vendor/**/*'
+
+Style/Documentation:
+  Enabled: false

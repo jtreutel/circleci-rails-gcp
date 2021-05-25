@@ -1,24 +1,12 @@
-# README
+# circleci-rails-gcp
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A sample project that deploys a super simple website running on Rails and Passenger to a Google Compute instance using CircleCI and Terraform.
 
-Things you may want to cover:
+### TODO
 
-* Ruby version
+- Persist plan file between Terraform "plan" and "apply" steps
+- Persist state file in Terraform "apply" step; add manual hold plus Terraform "destroy" step for demo cleanup purposes
+- Spruce up Rail index page
+- Clean up repo
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+test commit

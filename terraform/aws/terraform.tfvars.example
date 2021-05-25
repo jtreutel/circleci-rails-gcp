@@ -1,0 +1,29 @@
+#-------------------------------------------------------------------------------
+# REQUIRED VARS
+# Required input values without which the plan will not run.
+#-------------------------------------------------------------------------------
+
+aws_region = "ap-northeast-1"
+vpc_id     = "vpc-012345"
+subnet_id  = "subnet-012345"
+
+
+
+#-------------------------------------------------------------------------------
+# OPTIONAL VARS
+# Default values supplied, but you should still review each one.
+#-------------------------------------------------------------------------------
+
+resource_prefix = "foobar"
+extra_tags = {
+  foo    = "bar",
+  foobar = "baz"
+}
+instance_size    = "t3.large"
+root_volume_size = "125"
+root_volume_type = "gp2"
+key_name         = "your-key-name"
+inbound_cidrs = [
+  # your IP ranges go here
+]
+assign_public_ip = true

@@ -1,0 +1,144 @@
+version: 2.1
+
+orbs:
+  ruby: circleci/ruby@1.1.2
+  node: circleci/node@4.2.1
+  terraform: circleci/terraform@2.0.1
+
+jobs:
+  checkout-code:
+    docker:
+      - image: cimg/base:2021.01 
+    steps:
+      - checkout
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+  build:
+    docker:
+      - image: cimg/ruby:3.0.0-node
+    steps:
+      - attach_workspace:
+          at: .
+      - run: sudo apt update && sudo apt install libsqlite3-dev
+      - ruby/install-deps
+      # Store bundle cache
+      - node/install-packages:
+          pkg-manager: yarn
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+  test:
+    parallelism: 2
+    docker:
+      - image: cimg/ruby:3.0.0-node
+    steps:
+      - attach_workspace:
+          at: .
+      - ruby/rspec-test
+      - ruby/rubocop-check
+  security-scan:
+    docker:
+      - image: cimg/ruby:3.0.0-node
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Brakeman
+          command: bundle exec brakeman --color -o /dev/stdout -o ./brakeman.txt
+      - store_artifacts:
+          path: ./brakeman.txt
+          destination: brakeman_results
+  terraform-format-check:
+    docker:
+      - image: cimg/base:2021.01 
+    steps:
+      - attach_workspace:
+          at: .
+      - terraform/install:  
+          terraform_version: 0.14.5
+      - terraform/fmt:  
+          path: ./terraform/gcp
+  terraform-validate-and-plan:
+    docker:
+      - image: cimg/base:2021.01 
+    steps:
+      - attach_workspace:
+          at: .
+      - terraform/install:  
+          terraform_version: 0.14.5
+      - terraform/validate:  
+          path: ./terraform/gcp
+      - terraform/plan:
+          path: ./terraform/gcp
+          var: 'gcp_region=${GCP_REGION},gcp_project_name=${GCP_PROJECT_NAME},google_dns_zone_name=${GOOGLE_DNS_ZONE_NAME},commit_hash=${CIRCLE_SHA1},'
+  terraform-apply-infra:
+    docker:
+      - image: cimg/base:2021.01 
+    steps:
+      - attach_workspace:
+          at: .
+      - terraform/install:  
+          terraform_version: 0.14.5
+      - terraform/init:
+          path: ./terraform/gcp
+      - terraform/apply:
+          path: ./terraform/gcp
+          var: 'gcp_region=${GCP_REGION},gcp_project_name=${GCP_PROJECT_NAME},google_dns_zone_name=${GOOGLE_DNS_ZONE_NAME},commit_hash=${CIRCLE_SHA1:0:7},'
+  terraform-destroy-infra:
+    docker:
+      - image: cimg/base:2021.01 
+    steps:
+      - attach_workspace:
+          at: .
+      - terraform/install:  
+          terraform_version: 0.14.5
+      - terraform/init:
+          path: ./terraform/gcp
+      - terraform/destroy:
+          path: ./terraform/gcp
+          var: 'gcp_region=${GCP_REGION},gcp_project_name=${GCP_PROJECT_NAME},google_dns_zone_name=${GOOGLE_DNS_ZONE_NAME},commit_hash=${CIRCLE_SHA1:0:7},'
+
+
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - checkout-code
+      - build:
+          requires:
+            - checkout-code
+      - security-scan:
+          requires:
+            - build
+      - test:
+          requires:
+            - build
+      - terraform-format-check:
+          context: gcp-tf-testing
+          requires:
+            - checkout-code
+      - terraform-validate-and-plan:
+          context: gcp-tf-testing
+          requires:
+            - checkout-code
+      - manual-approval-apply:
+          type: approval
+          requires:
+            - terraform-validate-and-plan
+            - test
+      - terraform-apply-infra:
+          context: gcp-tf-testing
+          requires:
+            - manual-approval-apply
+      - manual-approval-destroy:
+          type: approval
+          requires:
+            - terraform-apply-infra
+      - terraform-destroy-infra:
+          context: gcp-tf-testing
+          requires:
+            - manual-approval-destroy
