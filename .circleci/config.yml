@@ -39,6 +39,18 @@ jobs:
           at: .
       - ruby/rspec-test
       - ruby/rubocop-check
+  security-scan:
+    docker:
+      - image: cimg/ruby:3.0.0-node
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Brakeman
+          command: bundle exec brakeman --color -o /dev/stdout -o ./brakeman.txt
+      - store_artifacts:
+          path: ./brakeman.txt
+          destination: security-scan
   terraform-format-check:
     docker:
       - image: cimg/base:2021.01 
@@ -86,6 +98,9 @@ workflows:
       - build:
           requires:
             - checkout-code
+      - security-scan:
+          requires:
+            - build
       - test:
           requires:
             - build
