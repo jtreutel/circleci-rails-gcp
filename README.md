@@ -8,3 +8,5 @@ A sample project that deploys a super simple website running on Rails and Passen
 - Persist state file in Terraform "apply" step; add manual hold plus Terraform "destroy" step for demo cleanup purposes
 - Spruce up Rail index page
 - Clean up repo
+
+test commit
