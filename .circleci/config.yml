@@ -26,7 +26,6 @@ jobs:
       # Store bundle cache
       - node/install-packages:
           pkg-manager: yarn
-          #cache-key: "yarn.lock"
       - persist_to_workspace:
           root: .
           paths:
@@ -38,17 +37,6 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      #- ruby/install-deps
-      #- node/install-packages:
-      #    pkg-manager: yarn
-      #    cache-key: "yarn.lock"
-      # Run rspec in parallel
-      #- run:
-      #    name: Install Ruby gems for testing
-      #    command: |
-      #      bundle config set --local with 'test'
-      #      bundle config set --local deployment 'true'
-      #      bundle install
       - ruby/rspec-test
       - ruby/rubocop-check
   terraform-format-check:
