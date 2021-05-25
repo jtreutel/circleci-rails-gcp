@@ -87,6 +87,19 @@ jobs:
       - terraform/apply:
           path: ./terraform/gcp
           var: 'gcp_region=${GCP_REGION},gcp_project_name=${GCP_PROJECT_NAME},google_dns_zone_name=${GOOGLE_DNS_ZONE_NAME},commit_hash=${CIRCLE_SHA1:0:7},'
+  terraform-destroy-infra:
+    docker:
+      - image: cimg/base:2021.01 
+    steps:
+      - attach_workspace:
+          at: .
+      - terraform/install:  
+          terraform_version: 0.14.5
+      - terraform/init:
+          path: ./terraform/gcp
+      - terraform/destroy:
+          path: ./terraform/gcp
+          var: 'gcp_region=${GCP_REGION},gcp_project_name=${GCP_PROJECT_NAME},google_dns_zone_name=${GOOGLE_DNS_ZONE_NAME},commit_hash=${CIRCLE_SHA1:0:7},'
 
 
 
@@ -121,3 +134,9 @@ workflows:
           context: gcp-tf-testing
           requires:
             - manual-approval
+      - manual-approval-destroy:
+          type: approval
+          requires:
+            - terraform-apply-infra
+      - terraform-destroy-infra:
+          context: gcp-tf-testing
